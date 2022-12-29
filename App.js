@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-
-
-export default class App extends React.Component {
-
+export class ListTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,37 +57,77 @@ export default class App extends React.Component {
     })
   }
 
-  render () {
-    return (
+  render() {
+    return(
       <View style={styles.container}>
         <FlatList
           style={{ width: '100%' }}
           data={ this.state.data }
           refreshing={ this.state.refreshing }
           onRefresh={ this.refreshData }
-          renderItem={({item, separators}) => (
-            <View style={{ paddingVertical: 15, borderBottomWidth: 1 }}>
+          renderItem={({item, index }) => (
+            <View style={[ styles.rowStyle, index % 2 ? styles.itemOdd : styles.itemEven ]}>
               <Image
-                style={{ height: 56, width: 56 }}
+                style={ styles.imag }
                 source={{ uri: item.image }}
               />
-              <Text>{item.name}</Text>
+              <Text style={{ marginLeft: 25, lineHeight: 50, fontWeight: 'bold', color: 'blue', opacity: 0.5 }}>{item.name}</Text>
             </View>
           )}
           keyExtractor={ (item, index) => index.toString()}
           />
         <StatusBar style="auto" />
       </View>
+    )
+  }
+}
+
+export class TabTwo extends React.Component {
+  render() {
+    return(
+      <View>
+        <Text>Tab Two</Text>
+      </View>
+    )
+  }
+}
+
+const Tab = createBottomTabNavigator()
+
+export default class App extends React.Component {
+  render () {
+    return (
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name='People' component={ListTab}/>
+          <Tab.Screen name='Two' component={TabTwo}/>
+        </Tab.Navigator>
+      </NavigationContainer>
     );
   }
-
-
 }
 
 const styles = StyleSheet.create({
+  image: {
+    borderRadius: 56/2,
+    height: 56,
+    width: 56
+  },
+  rowStyle: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderColor: 'lightgrey'
+  },
+  itemOdd: {
+    backgroundColor: '#f1f1f1'
+  },
+  itemEven: {
+    backgroundColor: '#ffffff'
+  },
   container: {
     flex: 1,
-    marginTop: 50,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
