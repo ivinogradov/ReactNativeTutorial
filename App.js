@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View, Image } from 'react-native';
 
 
 
@@ -9,7 +9,34 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: ["Harry", "James", "Bobby", "Carl", "Jos"]
+      data: [{
+        name: "Marina",
+        image: "http://i.pravatar.cc/400?img=1"
+      }, {
+        name: "James",
+        image: "http://i.pravatar.cc/400?img=2"
+      }, {
+        name:  "Bobby",
+        image: "http://i.pravatar.cc/400?img=3"
+      }, {
+        name:  "Carl",
+        image: "http://i.pravatar.cc/400?img=4"
+      }, {
+        name:  "Mila",
+        image: "http://i.pravatar.cc/400?img=5"
+      }, {
+        name:  "Ilya",
+        image: "http://i.pravatar.cc/400?img=6"
+      }, {
+        name:  "Josh",
+        image: "http://i.pravatar.cc/400?img=7"
+      }, {
+        name:  "Garry",
+        image: "http://i.pravatar.cc/400?img=8"
+      }, {
+        name:  "Jos",
+        image: "http://i.pravatar.cc/400?img=9"
+      }]
     }
   }
 
@@ -17,10 +44,15 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
+          style={{ width: '100%' }}
           data={ this.state.data }
           renderItem={({item, separators}) => (
-            <View>
-              <Text>{item}</Text>
+            <View style={{ paddingVertical: 15, borderBottomWidth: 1 }}>
+              <Image
+                style={{ height: 56, width: 56 }}
+                source={{ uri: item.image }}
+              />
+              <Text>{item.name}</Text>
             </View>
           )}
           keyExtractor={ (item, index) => index.toString()}
