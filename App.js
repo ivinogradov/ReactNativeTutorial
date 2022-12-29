@@ -10,6 +10,24 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       data: [{
+        name: "Old",
+        image: "http://i.pravatar.cc/400?img=10"
+      }, {
+        name: "Data",
+        image: "http://i.pravatar.cc/400?img=20"
+      }],
+      refreshing: false
+    }
+  }
+
+  refreshData = () => {
+    this.setState({
+      refreshing: true
+    })
+
+    this.setState({
+      refreshing: false,
+      data: [{
         name: "Marina",
         image: "http://i.pravatar.cc/400?img=1"
       }, {
@@ -37,7 +55,7 @@ export default class App extends React.Component {
         name:  "Jos",
         image: "http://i.pravatar.cc/400?img=9"
       }]
-    }
+    })
   }
 
   render () {
@@ -46,6 +64,8 @@ export default class App extends React.Component {
         <FlatList
           style={{ width: '100%' }}
           data={ this.state.data }
+          refreshing={ this.state.refreshing }
+          onRefresh={ this.refreshData }
           renderItem={({item, separators}) => (
             <View style={{ paddingVertical: 15, borderBottomWidth: 1 }}>
               <Image
