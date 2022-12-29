@@ -68,7 +68,7 @@ export class ListTab extends React.Component {
           renderItem={({item, index }) => (
             <View style={[ styles.rowStyle, index % 2 ? styles.itemOdd : styles.itemEven ]}>
               <Image
-                style={ styles.imag }
+                style={ styles.image }
                 source={{ uri: item.image }}
               />
               <Text style={{ marginLeft: 25, lineHeight: 50, fontWeight: 'bold', color: 'blue', opacity: 0.5 }}>{item.name}</Text>
