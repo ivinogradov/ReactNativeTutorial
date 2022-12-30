@@ -1,24 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import { WEATHER_API_KEY } from '../../weather_api_key';
 
 export default function Weather () {
-    fetchCityTemp('London', 'UK');
-    const list = getRandomCities(cities, 5);
-    console.log(list);
-    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [ isRefreshing, setIsRefreshing ] = useState(false);
+    const [ pickedCities, setPickedCities ] = useState([]);
+    useEffect(() => {
+        fetchTemps(setPickedCities);
+    }, []);
+    console.log(pickedCities);
     return (
         <View>
             <Text>Weather Tab</Text>
         </View>
     );
 }
+
+const fetchTemps = (setPickedCities) => {
+    var list = getRandomCities(cities, 1);
+    var fetchedTemps = [];
+    for (const city in list) {
+        if (Object.hasOwnProperty.call(list, city)) {
+            const element = list[city];
+            fetchCityTemp(element.city, element.country, fetchedTemps, setPickedCities);
+        }
+    }
+}
 /**
  * Fetches data from open weather map API
  * @param {string} city city name
  * @param {string} country country name or abbreviation
  */
-const fetchCityTemp = ( city, country ) => {
+const fetchCityTemp = ( city, country, citiesTempsList, setPickedCities ) => {
     fetch('https://api.openweathermap.org/data/2.5/weather?q='
     + city + ',' + country +
     '&appid=' + WEATHER_API_KEY + '&units=metric')
@@ -30,8 +43,12 @@ const fetchCityTemp = ( city, country ) => {
             temp: Math.ceil(responseJson.main.temp),
             type: responseJson.weather[0].main
         };
-        console.log(city);
-    });
+        citiesTempsList.push(city);
+        setPickedCities(citiesTempsList);
+    })
+    .catch((error) => {
+        console.log("Error " + error);
+    })
 }
 /**
  * Picks a number or random cities from the array of cities
