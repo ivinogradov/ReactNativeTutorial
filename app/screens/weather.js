@@ -1,19 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, unstable_batchedUpdates } from 'react-native';
+import { View, Text, FlatList, } from 'react-native';
 import { WEATHER_API_KEY } from '../../weather_api_key';
 
 export default function Weather () {
+    const { isRefreshing, pickedCities } = useDataFetching();
+    console.log(pickedCities);
+    return (
+        <View>
+            <FlatList
+                data={pickedCities}
+                renderItem={({item, index}) => (
+                    <View style={{ borderBottomWidth: 1, borderColor: 'lightgrey' }}>
+                        <Text>{item.name}</Text>
+                        <Text>{item.country}</Text>
+                    </View>
+                )}
+                keyExtractor={ (item, index) =>  index.toString()  }
+            />
+        </View>
+    );
+}
+
+/**
+ * Custom hook for fetching weather data
+ * @returns { boolean, object[] } refresh status and array of city/weather objects
+ */
+const useDataFetching = () => {
     const [ isRefreshing, setIsRefreshing ] = useState(false);
     const [ pickedCities, setPickedCities ] = useState([]);
     useEffect(() => {
         fetchTemps(setPickedCities);
     }, []);
-    console.log(pickedCities);
-    return (
-        <View>
-            <Text>Weather Tab</Text>
-        </View>
-    );
+
+    return {
+        isRefreshing,
+        pickedCities
+    };
 }
 
 /**
@@ -22,7 +44,7 @@ export default function Weather () {
  * @param {function} setPickedCities state setter function accepting an array of cities
  */
 const fetchTemps = (setPickedCities) => {
-    var list = getRandomCities(cities, 6);
+    var list = getRandomCities(cities, 2);
     var fetchedTemps = [];
     for (const city in list) {
         if (Object.hasOwnProperty.call(list, city)) {
