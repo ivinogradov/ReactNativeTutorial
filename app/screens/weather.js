@@ -3,14 +3,24 @@ import { View, Text, FlatList, } from 'react-native';
 import { WEATHER_API_KEY } from '../../weather_api_key';
 
 export default function Weather () {
-    const { isRefreshing, pickedCities } = useDataFetching();
+    const [ isRefreshing, setIsRefreshing ] = useState(false);
+    const [ pickedCities, setPickedCities ] = useState([]);
+    useEffect(() => {
+        fetchTemps(setPickedCities, setIsRefreshing);
+    }, []);
     console.log(pickedCities);
     return (
-        <View>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <FlatList
+                style={{ width: '100%' }}
                 data={pickedCities}
+                refreshing={isRefreshing}
+                onRefresh={() => {
+                    setIsRefreshing(true);
+                    fetchTemps(setPickedCities, setIsRefreshing);
+                }}
                 renderItem={({item, index}) => (
-                    <View style={{ borderBottomWidth: 1, borderColor: 'lightgrey' }}>
+                    <View style={{ borderBottomWidth: 1, borderColor: 'lightgrey', flexDirection: 'row', justifyContent: 'space-between', padding: 15 }}>
                         <Text>{item.name}</Text>
                         <Text>{item.country}</Text>
                     </View>
@@ -22,34 +32,17 @@ export default function Weather () {
 }
 
 /**
- * Custom hook for fetching weather data
- * @returns { boolean, object[] } refresh status and array of city/weather objects
- */
-const useDataFetching = () => {
-    const [ isRefreshing, setIsRefreshing ] = useState(false);
-    const [ pickedCities, setPickedCities ] = useState([]);
-    useEffect(() => {
-        fetchTemps(setPickedCities);
-    }, []);
-
-    return {
-        isRefreshing,
-        pickedCities
-    };
-}
-
-/**
  * Fetching temperatures for a 6 random cities
  * @precondition API restriction 6 calls/minute - can be refreshed up to 10 times in a minute
  * @param {function} setPickedCities state setter function accepting an array of cities
  */
-const fetchTemps = (setPickedCities) => {
+const fetchTemps = (setPickedCities, setIsRefreshing) => {
     var list = getRandomCities(cities, 2);
     var fetchedTemps = [];
     for (const city in list) {
         if (Object.hasOwnProperty.call(list, city)) {
             const element = list[city];
-            fetchCityTemp(element.city, element.country, fetchedTemps, setPickedCities);
+            fetchCityTemp(element.city, element.country, fetchedTemps, setPickedCities, setIsRefreshing);
         }
     }
 }
@@ -60,7 +53,7 @@ const fetchTemps = (setPickedCities) => {
  * @param {object[]} citiesTempsList array of city orjects containing weather data for each city
  * @param {function} setPickedCities state setter function accepting an array of cities
  */
-const fetchCityTemp = ( city, country, citiesTempsList, setPickedCities ) => {
+const fetchCityTemp = ( city, country, citiesTempsList, setPickedCities, setIsRefreshing ) => {
     fetch('https://api.openweathermap.org/data/2.5/weather?q='
     + city + ',' + country +
     '&appid=' + WEATHER_API_KEY + '&units=metric')
@@ -74,9 +67,11 @@ const fetchCityTemp = ( city, country, citiesTempsList, setPickedCities ) => {
         };
         citiesTempsList.push(city);
         setPickedCities(citiesTempsList);
+        setIsRefreshing(false);
     })
     .catch((error) => {
         console.log("Error " + error);
+        setIsRefreshing(false);
     })
 }
 /**
