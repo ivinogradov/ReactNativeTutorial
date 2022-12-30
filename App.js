@@ -3,6 +3,7 @@ import React from 'react';
 import { FlatList, StyleSheet, Text, View, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Weather from './app/screens/weather';
 
 export class ListTab extends React.Component {
   constructor(props) {
@@ -82,16 +83,6 @@ export class ListTab extends React.Component {
   }
 }
 
-export class TabTwo extends React.Component {
-  render() {
-    return(
-      <View>
-        <Text>Tab Two</Text>
-      </View>
-    )
-  }
-}
-
 const Tab = createBottomTabNavigator()
 
 export default class App extends React.Component {
@@ -100,7 +91,7 @@ export default class App extends React.Component {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name='People' component={ListTab}/>
-          <Tab.Screen name='Two' component={TabTwo}/>
+          <Tab.Screen name='Random Weather' component={Weather}/>
         </Tab.Navigator>
       </NavigationContainer>
     );
