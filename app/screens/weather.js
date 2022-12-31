@@ -97,7 +97,7 @@ const getWeatherIcon = (type) => {
  * @param {function} setPickedCities state setter function accepting an array of cities
  */
 const fetchTemps = (setPickedCities, setIsRefreshing) => {
-    var list = getRandomCities(cities, 2);
+    var list = getRandomCities(cities, 6);
     var fetchedTemps = [];
     for (const city in list) {
         if (Object.hasOwnProperty.call(list, city)) {
