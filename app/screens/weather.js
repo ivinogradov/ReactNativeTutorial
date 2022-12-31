@@ -46,7 +46,7 @@ const getTempRange = (temperature) => {
         return 1;
     } else if (temperature > 10 && temperature < 20) {
         return 2;
-    } else if (temperature >= 20 && temperature <30) {
+    } else if (temperature >= 20 && temperature < 30) {
         return 3;
     } else {
         return 4;
@@ -202,6 +202,18 @@ const cities = [
     {
         city: "San Juan",
         country: "Puerto Rico"
+    },
+    {
+        city: "Panama City",
+        country: "Panama"
+    },
+    {
+        city: "Adis Ababa",
+        country: "Ethiopia"
+    },
+    {
+        city: "Hanoi",
+        country: "Vietnam"
     }
 ];
 
@@ -237,5 +249,5 @@ const styles = StyleSheet.create({
     cold: { color: 'blue' },
     cool: { color: 'green' },
     warm: { color: 'orange' },
-    hot: { color: 'red '}
+    hot: { color: 'red' }
 })
