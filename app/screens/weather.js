@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { WEATHER_API_KEY } from '../../weather_api_key';
 
 export default function Weather () {
@@ -10,7 +10,7 @@ export default function Weather () {
     }, []);
     console.log(pickedCities);
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.container}>
             <FlatList
                 style={{ width: '100%' }}
                 data={pickedCities}
@@ -20,15 +20,37 @@ export default function Weather () {
                     fetchTemps(setPickedCities, setIsRefreshing);
                 }}
                 renderItem={({item, index}) => (
-                    <View style={{ borderBottomWidth: 1, borderColor: 'lightgrey', flexDirection: 'row', justifyContent: 'space-between', padding: 15 }}>
-                        <Text>{item.name}</Text>
-                        <Text>{item.country}</Text>
+                    <View style={styles.row}>
+                        <Text style={styles.cityName}>{item.name}, {item.country}</Text>
+                        <Text style={[styles.cityTemp,
+                            getTempRange(item.temp) == 1 ? styles.cold :
+                            getTempRange(item.temp) == 2 ? styles.cool :
+                            getTempRange (item.temp) == 3 ? styles.warm :
+                            styles.hot
+                             ]}>{item.temp} ℃</Text>
                     </View>
                 )}
                 keyExtractor={ (item, index) =>  index.toString()  }
             />
         </View>
     );
+}
+
+/**
+ * Temperature grouper (TODO: switch to enums)
+ * @param {number} temperature degree celsius
+ * @returns number representing cold, medium, warn, hot
+ */
+const getTempRange = (temperature) => {
+    if (temperature < 11) {
+        return 1;
+    } else if (temperature > 10 && temperature < 20) {
+        return 2;
+    } else if (temperature >= 20 && temperature <30) {
+        return 3;
+    } else {
+        return 4;
+    }
 }
 
 /**
@@ -168,5 +190,52 @@ const cities = [
     {
         city: "Cancun",
         country: "Mexico"
+    },
+    {
+        city: "Bangalore",
+        country: "India"
+    },
+    {
+        city: "Phuket",
+        country: "Thailand"
+    },
+    {
+        city: "San Juan",
+        country: "Puerto Rico"
     }
 ];
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundcolor: '#fff'
+    },
+    row: {
+        flex: 1,
+        borderBottomWidth: 1,
+        borderBottomColor: 'lightgrey',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
+        paddingVertical: 25
+    },
+    cityName: {
+        fontSize: 20,
+        lineHeight: 40,
+        fontFamily: 'Avenir'
+    },
+    cityTemp: {
+        fontSize: 30,
+        lineHeight: 40,
+        marginRight: 15,
+        fontWeight: 'bold',
+        fontFamily: 'Avenir'
+    },
+    cold: { color: 'blue' },
+    cool: { color: 'green' },
+    warm: { color: 'orange' },
+    hot: { color: 'red '}
+})
