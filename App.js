@@ -13,7 +13,7 @@ export default class App extends React.Component {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name='People' component={People}/>
-          <Tab.Screen name='Random Weather' component={Weather}/>
+          <Tab.Screen name='☀ Random Weather' component={Weather}/>
         </Tab.Navigator>
         <StatusBar style="auto" />
       </NavigationContainer>

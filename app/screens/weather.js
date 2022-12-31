@@ -30,6 +30,7 @@ export default function Weather () {
                             start={[0, 0.5]}
                             >
                             <View style={styles.row}>
+                                <Text style={styles.cityTemp}>{getWeatherIcon(item.type)}</Text>
                                 <Text style={styles.cityName}>{item.name}, {item.country}</Text>
                                 <Text style={[styles.cityTemp,
                                     getTempRange(item.temp) == 1 ? styles.cold :
@@ -61,6 +62,32 @@ const getTempRange = (temperature) => {
         return 3;
     } else {
         return 4;
+    }
+}
+
+/**
+ * Converts weather condition text into emoji representation
+ * @param {string} type condition string from weather API
+ * @returns {string} emoji character
+ */
+const getWeatherIcon = (type) => {
+    switch (type) {
+        case 'Clouds':
+            return '⛅';
+        case 'Clear':
+            return '☀';
+        case 'Haze':
+            return '🌪';
+        case 'Thunderstorm':
+            return '⛈';
+        case 'Rain':
+            return '🌧';
+        case 'Snow':
+             return '🌨';
+        case 'Mist':
+            return '🌫';
+        default:
+            return '😕';
     }
 }
 
