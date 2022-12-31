@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableHighlight } from 'react-native';
 import { WEATHER_API_KEY } from '../../weather_api_key';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Weather () {
     const [ isRefreshing, setIsRefreshing ] = useState(false);
@@ -20,15 +21,25 @@ export default function Weather () {
                     fetchTemps(setPickedCities, setIsRefreshing);
                 }}
                 renderItem={({item, index}) => (
-                    <View style={styles.row}>
-                        <Text style={styles.cityName}>{item.name}, {item.country}</Text>
-                        <Text style={[styles.cityTemp,
-                            getTempRange(item.temp) == 1 ? styles.cold :
-                            getTempRange(item.temp) == 2 ? styles.cool :
-                            getTempRange (item.temp) == 3 ? styles.warm :
-                            styles.hot
-                             ]}>{item.temp} ℃</Text>
-                    </View>
+                    <TouchableHighlight
+                        onPress={ () => alert(item.desc) }
+                        underlayColor="lightgrey"
+                    >
+                        <LinearGradient
+                            colors={['rgba(0,0,0,0.05)','rgba(0,0,0,0)']}
+                            start={[0, 0.5]}
+                            >
+                            <View style={styles.row}>
+                                <Text style={styles.cityName}>{item.name}, {item.country}</Text>
+                                <Text style={[styles.cityTemp,
+                                    getTempRange(item.temp) == 1 ? styles.cold :
+                                    getTempRange(item.temp) == 2 ? styles.cool :
+                                    getTempRange (item.temp) == 3 ? styles.warm :
+                                    styles.hot
+                                    ]}>{item.temp} ℃</Text>
+                            </View>
+                        </LinearGradient>
+                    </TouchableHighlight>
                 )}
                 keyExtractor={ (item, index) =>  index.toString()  }
             />
@@ -85,7 +96,8 @@ const fetchCityTemp = ( city, country, citiesTempsList, setPickedCities, setIsRe
             name: responseJson.name,
             country: country,
             temp: Math.ceil(responseJson.main.temp),
-            type: responseJson.weather[0].main
+            type: responseJson.weather[0].main,
+            desc: 'Humidity: ' + responseJson.main.humidity + '% - ' + responseJson.weather[0].main
         };
         citiesTempsList.push(city);
         setPickedCities(citiesTempsList);
